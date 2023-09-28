@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
         minLength:6,
     }
 })
-
+// saving and generating salt and hashing password function
 UserSchema.pre('save',async function(){
     const salt = await bcrypt.genSalt(10)
     this.password= await  bcrypt.hash(this.password ,salt )
@@ -33,9 +33,22 @@ UserSchema.pre('save',async function(){
 })
 
 UserSchema.methods.createJWT = function(){
-   return jwt.sign({userId:this._id, name:this.name}, process.env.JWT_SECRET, {
+   return jwt.sign({userId:this._id, 
+    name:this.name},
+     process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
 })
 }
+
+// comapring password function
+UserSchema.methods.comparePassword = async function(candidatePassword) {
+    try {
+        const isMatch = await bcrypt.compare(candidatePassword, this.password);
+        return isMatch;
+    } catch (error) {
+        throw error; 
+    }
+};
+
 
 module.exports = mongoose.model('User', UserSchema)
