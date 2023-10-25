@@ -10,19 +10,19 @@ const auth = (req, res, next) => {
   }
   const token = authHeader.split(' ')[1];
 
-  try {
+
     const payload = jwt.verify(token, process.env.JWT_SECRET);
 
     // const user = User.findById(payload.id).select('-password')
     // req.user = user
+   
+    console.log({payload})
 
     req.user = { userId: payload.userId, name: payload.name };
     next();
-  } catch (error) {
-    console.error('JWT Verification Error:', error);
-    throw new UnAuthenticationError('Authentication Invalid');
-  }
-};
+ 
+   
+  };
 
 module.exports = auth;
  

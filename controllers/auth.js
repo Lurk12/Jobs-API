@@ -5,15 +5,12 @@ const {BadRequestError, UnAuthenticationError} = require('../error')
 
 
 const register = async(req, res)=>{
-    try {
+    
         //creating through the req.body rd
        const user = await User.create({...req.body})
        const token = user.createJWT()
         res.status(StatusCodes.CREATED ).json({user:{name:user.name, token}})
-    } catch (error) {
-        console.log(error);
-        
-    }
+ 
 }       
 const login = async(req, res)=>{
     //email and password is provided for the login in the request body
